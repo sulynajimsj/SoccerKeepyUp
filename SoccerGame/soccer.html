@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Soccer Keep Up</title>
+<!-- zimjs.com - JavaScript Canvas Framework -->
+<script src="https://zimjs.org/cdn/nft/00/zim.js"></script>
+
+<!-- use zimjs.com/distill for minified individual functions! -->
+
+<!-- import Box2D and ZIM Physics helper -->
+<script src="https://zimjs.org/cdn/Box2dWeb-2.1.a.3.min.js"></script>
+<script src="https://zimjs.org/cdn/physics_2.0.js"></script>
+
+
+
+
+
+<script>
+
+// See Docs under Frame for FIT, FILL, FULL, and TAG scaling modes
+let stageW = 1000;
+let stageH = 1600;
+const frame = new Frame(FIT, stageW, stageH, light, dark, "soccer.png");
+frame.on("ready", () => {
+    const stage = frame.stage;
+    let stageW = frame.width;
+    let stageH = frame.height;
+    let count = 0;
+  
+
+
+    var button = new Button(250,60,"Try Again");
+        button.pos(50,50);
+    
+    var label = new Label({
+       text:"Score: 0",
+       size:40,
+        bold: true,
+        
+       fontOptions:"bold"
+    });
+    label.pos(420, 50);
+    
+    var label2 = new Label({
+       text:"GAME OVER",
+       size:100,
+       fontOptions:"bold"
+    });
+    
+    label2.center();
+    label2.vis(false);
+    
+   
+
+    //code here
+    //code here
+    const physics = new Physics();
+    physics.remove(physics.borderTop)
+    physics.remove(physics.borderBottom)
+    const ball = asset("soccer.png").centerReg().sca(0.2)
+    ball.on("mousedown", e=>{
+        
+        if (count==0){
+           ball.addPhysics({shape:"circle", restitution:1.2}); 
+            button.vis(false);
+        }
+        
+        
+        ball.impulse((ball.x-e.stageX) * 9, ((ball.y-80)-e.stageY) * 10);
+        count++
+        label.text = `Score: ${count}`;
+        
+        
+        
+    })
+    
+    Ticker.add(check, stage);
+    function check(){
+        if (ball.y > 1700){
+            
+            label2.vis(true);
+            button.vis(true);
+            
+        }
+        if (ball.x>stageW){
+            ball.impulse(10);
+        }
+        else if (ball.x <= 0){
+            ball.impulse(-10);
+        }
+    }
+    
+    
+    
+    
+    button.on("click", function(){
+        zog("clicking");
+        count = 0;
+        ball.removePhysics();
+        ball.centerReg();
+        label2.vis(false);
+        
+        label.text = `Score: ${count}`;
+    });
+    
+   
+    
+    
+    
+   
+    
+    
+    
+      
+        
+    stage.update(); // needed to view changes
+});
+    
+</script>
+<meta name="viewport" content="width=device-width, user-scalable=no" />
+</head>
+<body>
+    
+</body>
+
+</html>
